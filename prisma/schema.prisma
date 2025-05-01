@@ -1,0 +1,152 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+enum UserType{
+  Superadmin
+  Admin
+  User
+}
+
+enum SubscriptionType{
+Free
+Professional_monthly
+Professional_yearly
+Premium_monthly
+Premium_yearly
+}
+
+enum ActivityType {
+  Monthly
+  Quarterly
+  Yearly
+  admin
+}
+enum MonthType {
+  January
+  February
+  March
+  April
+  May
+  June
+  July
+  August
+  September
+  October
+  November
+  December
+}
+
+model Year {
+  id           Int           @id @default(autoincrement())
+  year         Int           @unique
+  activityData ActivityData[]
+}
+
+model Activity {
+  id           Int           @id @default(autoincrement())
+  name         String
+  type         ActivityType
+  activityData ActivityData[] 
+}
+model QuarterlyType{
+  id           Int           @id @default(autoincrement())
+  startMonth   MonthType  
+  endMonth     MonthType  
+  activityData ActivityData[] 
+}
+model ActivityData {
+  id         Int       @id @default(autoincrement())
+  taskName       String
+  type       ActivityType
+  year       Year      @relation(fields: [yearId], references: [id])
+  yearId     Int
+  month      MonthType?
+  dueDate      DateTime
+  activity   Activity   @relation(fields: [activityId], references: [id])
+  activityId Int
+   quarterlyType  QuarterlyType?   @relation(fields: [quarterlyTypeId], references: [id])
+  quarterlyTypeId Int?
+
+}
+
+model TableData {
+  id         Int    @id @default(autoincrement())
+ key         String?
+ companyName String?
+ activityName String?
+ year        Int?
+ month         MonthType?
+ selectedActivityType  ActivityType
+  data       String // Adjust this field as necessary to store your table data.
+
+  user       User[]
+}
+
+model User {
+  id                 Int              @id @default(autoincrement())
+  name               String?
+  email              String           @unique
+  password           String?
+  userType           UserType
+  link               String?
+  subscriptionType   SubscriptionType
+  lastPaymentDate         DateTime?     
+  cancellationReason      String?     
+  tableDataId            Int?             // Add this field to refer to a specific TableData entry
+  tableData              TableData?       @relation(fields: [tableDataId], references: [id])
+  otp                String?          // OTP field
+  otpExpiration      DateTime?        // OTP expiration time
+  subscriptions       Subscription[]
+}
+model Subscription {
+  id                   Int        @id @default(autoincrement())
+  userId               Int        // Reference to User
+  razorpayCustomerId   String     // Razorpay Customer ID
+  planId               String     // ID of the subscription plan
+  startDate            DateTime   @default(now())
+  endDate              DateTime?  // When the subscription expires
+  amount               Int        // Subscription amount
+  status               String     // Active, Inactive, etc.
+  autoRenew            Boolean    @default(true) // Indicates if the subscription is auto-renewable
+  renewalCount         Int        @default(0) // Track the number of renewals
+  user                 User       @relation(fields: [userId], references: [id])
+  payments            Payment[]
+}
+model Payment {
+  id            Int        @id @default(autoincrement())
+  subscriptionId Int       // Reference to the Subscription
+  amount        Int        // Amount paid
+  paymentDate   DateTime   @default(now()) // Date of the payment
+  status        String     // Success, Failed, etc.
+  razorpayPaymentId String? // ID from Razorpay for tracking purposes
+  subscription  Subscription @relation(fields: [subscriptionId], references: [id])
+}
+
+model Link {
+  id             Int     @id @default(autoincrement())
+  link           String  @unique
+  owner          String?
+ recievers       Json?
+  data           Json
+}
+
+
+model Ad {
+  id         Int      @id @default(autoincrement())
+  contentUrl String   // URL for the image or video
+  startDate  DateTime // Ad start date
+  endDate    DateTime // Ad end date
+  createdAt  DateTime @default(now()) // Timestamp for when the ad was created
+  updatedAt  DateTime @updatedAt      // Auto-updated timestamp for changes
+}
