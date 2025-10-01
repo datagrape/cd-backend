@@ -3,13 +3,7 @@
         "apps": [],
         "details": [
             {
-                "appID": "72449NCMKQ.com.thirdeyetechlabs.taskdiary",
-                "paths": [
-                    "*"
-                ]
-            },
-            {
-                "appID": "72449NCMKQ.com.thirdeyetechlabs.maintenancediary",
+                "appID": "72449NCMKQ.com.thirdeyetechlabs.compliancediary",
                 "paths": [
                     "*"
                 ]
