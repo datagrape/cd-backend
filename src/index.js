@@ -4,6 +4,9 @@ const Razorpay = require("razorpay");
 const multer = require("multer");
 const cors = require("cors");
 const app = express();
+// ✅ add these:
+const path = require("path");
+const fs = require("fs");
 // const userRoutes = require('./routes/userRoutes');
 const prisma = require("../prismaClient");
 const tableDataRoutes = require("./routes/tableDataRoutes");
