@@ -27,6 +27,69 @@ const updateSubscriptionRoutes = require("./routes/updateSubscription");
 app.use(express.json()); // For parsing application/json
 
 app.use(cors());
+
+
+/* --------------- Use src/.well-known explicitly --------------- */
+const WELL_KNOWN_DIR = path.join(__dirname, '.well-known'); // <- your location
+const AASA_NAME = 'apple-app-site-association';
+const ASSETLINKS_NAME = 'assetlinks.json';
+
+function readAndSendJSON(fileName, res) {
+  const full = path.join(WELL_KNOWN_DIR, fileName);
+  fs.readFile(full, (err, buf) => {
+    if (err) {
+      console.error('[.well-known] read error:', full, err.code);
+      return res.status(404).json({ error: 'Not Found' });
+    }
+    res.set('Content-Type', 'application/json');      // required for Apple/Android
+    res.set('Cache-Control', 'public, max-age=600');  // optional
+    res.send(buf);                                    // no redirects
+  });
+}
+
+/* --------------- AASA (both Apple paths) --------------- */
+app.get('/.well-known/apple-app-site-association', (req, res) =>
+  readAndSendJSON(AASA_NAME, res)
+);
+app.get('/apple-app-site-association', (req, res) =>
+  readAndSendJSON(AASA_NAME, res)
+);
+
+/* --------------- Android assetlinks.json --------------- */
+app.get('/.well-known/assetlinks.json', (req, res) =>
+  readAndSendJSON(ASSETLINKS_NAME, res)
+);
+
+
+// Optional root alias (only if you want /assetlinks.json to work too)
+app.get('/assetlinks.json', (req, res) =>
+  readAndSendJSON(ASSETLINKS_NAME, res)
+);
+
+
+/* --------------- Debug helpers (remove later) --------------- */
+app.get('/_debug/wk', (req, res) => {
+  let files = [];
+  try { files = fs.readdirSync(WELL_KNOWN_DIR); } catch {}
+  res.json({
+    wellKnownDir: WELL_KNOWN_DIR,
+    files,
+    aasaExists: fs.existsSync(path.join(WELL_KNOWN_DIR, AASA_NAME)),
+    assetlinksExists: fs.existsSync(path.join(WELL_KNOWN_DIR, ASSETLINKS_NAME))
+  });
+});
+
+// View raw file contents quickly
+app.get('/.well-known/_cat/:name', (req, res) => {
+  const full = path.join(WELL_KNOWN_DIR, req.params.name);
+  fs.readFile(full, (err, buf) => {
+    if (err) return res.status(404).json({ error: 'Not Found' });
+    if (req.params.name === AASA_NAME || req.params.name.endsWith('.json')) {
+      res.set('Content-Type', 'application/json');
+    }
+    res.send(buf);
+  });
+});
 // Use the routes
 // app.use('/api/users', userRoutes);
 app.use("/api/activityData", activityDataRoutes);
