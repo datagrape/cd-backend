@@ -1,26 +1,13 @@
 [
-    {
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "com.thirdeyetechlabs.taskdiary",
-        "sha256_cert_fingerprints": [
-          "7F:93:B2:AE:A2:11:D6:A0:82:EB:29:43:09:DB:86:D9:61:7A:FA:0C:CC:5A:5D:FA:12:D3:71:27:AF:4B:06:56",
-          "FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C",
-          "33:FD:6C:4F:5F:19:34:C4:89:C0:C1:C8:AB:AA:12:72:9D:0F:AD:19:28:92:77:49:D1:44:FC:9A:27:9C:0F:E3",
-          "FA:11:1D:96:84:CD:19:03:E3:8B:24:6E:75:9D:4B:74:5A:5A:79:5B:70:9F:AE:B1:D3:00:4F:35:43:B8:A1:52"
-        ]
-      }
-    },
 {
       "relation": ["delegate_permission/common.handle_all_urls"],
       "target": {
         "namespace": "android_app",
-        "package_name": "com.maintenancediary",
+        "package_name": "com.thirdeyetechlabs.compliancediary",
         "sha256_cert_fingerprints": [
-        "AA:74:F6:0F:3D:81:F5:F0:5F:AB:5B:AB:51:1A:33:06:AC:20:D9:EA:71:FC:6B:50:DC:79:E6:43:C2:7A:50:6D",
+        "5B:92:8F:47:91:C4:8D:02:2B:48:72:3A:F3:EF:4F:7C:FF:2F:22:02:15:82:96:83:64:8D:38:AB:07:98:54:B3",
         "FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C",
-          "50:04:FC:5B:7D:04:FD:DB:7B:FA:81:3C:EA:4E:F3:EC:DD:8F:47:F5:52:1B:B0:89:F0:95:9A:E1:3E:26:31:C4",
+          "E7:C0:06:2F:54:06:82:6E:00:7F:5B:67:DF:0F:73:86:93:4E:F4:45:E8:F7:D5:51:68:BB:FB:C0:A2:52:04:7A",
           "FA:11:1D:96:84:CD:19:03:E3:8B:24:6E:75:9D:4B:74:5A:5A:79:5B:70:9F:AE:B1:D3:00:4F:35:43:B8:A1:52"
         ]
       }
