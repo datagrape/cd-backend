@@ -1,4 +1,4 @@
-const prisma = require('../prismaClient');
+const prisma = require('../../prismaClient');
 const nodemailer = require('nodemailer');
 
 /* Configure email transport */
