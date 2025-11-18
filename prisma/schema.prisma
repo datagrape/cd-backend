@@ -107,6 +107,7 @@ model User {
   tableData              TableData?       @relation(fields: [tableDataId], references: [id])
   otp                String?          // OTP field
   otpExpiration      DateTime?        // OTP expiration time
+  isDisabled           Boolean          @default(false)
   subscriptions       Subscription[]
 }
 model Subscription {

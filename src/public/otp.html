@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delete My Account – Secure Verification</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #f8f9fc;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 430px;
+      background: #fff;
+      padding: 35px;
+      border-radius: 16px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #222;
+      text-align: center;
+    }
+
+    .warning-box {
+      background: #fff1f1;
+      border-left: 4px solid #e02424;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #a30000;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      margin-bottom: 18px;
+      border: 1px solid #d2d5da;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    input:focus {
+      border-color: #dc2626;
+      box-shadow: 0 0 0 3px rgba(220,38,38,0.2);
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      background: #dc2626;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    button:hover {
+      background: #b91c1c;
+    }
+
+    .success, .error {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .success {
+      background: #d1fae5;
+      color: #065f46;
+      border-left: 4px solid #047857;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+      border-left: 4px solid #dc2626;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Delete My Account</h2>
+
+    <div class="warning-box">
+      ⚠️ This action is permanent. Once your account is deleted/disabled, it cannot be recovered.
+      Please verify your email to continue.
+    </div>
+
+    <label>Email Address</label>
+    <input id="email" type="email" placeholder="Enter your registered email" />
+
+    <button onclick="sendOtp()">Send Verification OTP</button>
+
+    <br><br>
+
+    <label>Enter OTP</label>
+    <input id="otp" type="text" placeholder="Enter OTP received on email" />
+
+    <button onclick="verifyOtp()">Confirm & Delete Account</button>
+
+    <div id="successMessage" class="success"></div>
+    <div id="errorMessage" class="error"></div>
+  </div>
+
+  <script>
+    async function sendOtp() {
+      const email = document.getElementById("email").value;
+      const successBox = document.getElementById("successMessage");
+      const errorBox = document.getElementById("errorMessage");
+
+      successBox.style.display = "none";
+      errorBox.style.display = "none";
+
+      const res = await fetch("/api/account/delete/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        successBox.innerText = data.message;
+        successBox.style.display = "block";
+      } else {
+        errorBox.innerText = data.error;
+        errorBox.style.display = "block";
+      }
+    }
+
+    async function verifyOtp() {
+      const email = document.getElementById("email").value;
+      const otp = document.getElementById("otp").value;
+
+      const successBox = document.getElementById("successMessage");
+      const errorBox = document.getElementById("errorMessage");
+
+      successBox.style.display = "none";
+      errorBox.style.display = "none";
+
+      const res = await fetch("/api/account/delete/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        successBox.innerText = "Your account has been successfully disabled.";
+        successBox.style.display = "block";
+      } else {
+        errorBox.innerText = data.error;
+        errorBox.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>

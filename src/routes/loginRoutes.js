@@ -31,6 +31,10 @@ router.post('/', async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
+        if (user.isDisabled) {
+        return res.status(401).json({ error: 'Account Not Found or Disabled' });
+        }
+
         // Generate JWT token
         const token = jwt.sign({ userId: user.id }, 'your_jwt_secret', {
 

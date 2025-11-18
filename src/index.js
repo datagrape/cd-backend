@@ -64,6 +64,16 @@ app.get('/.well-known/assetlinks.json', (req, res) =>
 );
 
 
+
+/* ---------------- Serve HTML/static files ---------------- */
+app.use(express.static(path.join(__dirname, 'public')));
+
+/* Optional pretty route: /otp */
+app.get('/otp', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'otp.html'));
+});
+
+
 // Optional root alias (only if you want /assetlinks.json to work too)
 app.get('/assetlinks.json', (req, res) =>
   readAndSendJSON(ASSETLINKS_NAME, res)
@@ -112,6 +122,7 @@ app.use("/api", customerRoutes);
 app.use("/api", subscriptionRoutes);
 app.use("/api", webhookRoutes);
 app.use("/api", updateSubscriptionRoutes);
+app.use('/api/account/delete', require('./routes/deleteAccountRoutes'));
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
